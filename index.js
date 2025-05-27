@@ -96,7 +96,7 @@ async function setupProxy() {
         return;
       }
       axiosInstance = axios.create({ httpAgent: agent, httpsAgent: agent });
-      cconsole.log(chalk.green(`Using proxy: ${proxyUrl}`));
+      console.log(chalk.green(`Using proxy: ${proxyUrl}`));
     } else {
       console.log(chalk.red("proxy.txt file is empty or not found. Continuing without proxy."));
     }
