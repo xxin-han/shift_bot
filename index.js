@@ -39,7 +39,7 @@ function readProxiesFromFile(filename) {
     const content = fs.readFileSync(filename, 'utf8');
     return content.split('\n').map(line => line.trim()).filter(line => line !== '');
   } catch (err) {
-    console.error(chalk.red("Gagal membaca file proxy.txt:", err.message));
+    console.error(chalk.red("Failed to read proxy.txt file:", err.message));
     return [];
   }
 }
@@ -73,7 +73,7 @@ lines.forEach(line => {
 });
 
 console.log();
-console.log(yellow('🚀 Welcome to KiteAi-Bot Script!'));
+console.log(yellow('🚀 Welcome to Coinshift Auto Bot!'));
 console.log(cyan('🐦 Follow us on Twitter: @xXin98'));
 console.log();
 
@@ -92,16 +92,16 @@ async function setupProxy() {
       } else if (proxyUrl.startsWith('socks5://')) {
         agent = new SocksProxyAgent(proxyUrl);
       } else {
-        console.log(chalk.red("Format proxy tidak dikenali. Harap gunakan http/https atau socks5."));
+        console.log(chalk.red("Unrecognized proxy format. Please use http/https or socks5."));
         return;
       }
       axiosInstance = axios.create({ httpAgent: agent, httpsAgent: agent });
-      console.log(chalk.green(`Menggunakan proxy: ${proxyUrl}`));
+      cconsole.log(chalk.green(`Using proxy: ${proxyUrl}`));
     } else {
-      console.log(chalk.red("File proxy.txt kosong atau tidak ditemukan. Melanjutkan tanpa proxy."));
+      console.log(chalk.red("proxy.txt file is empty or not found. Continuing without proxy."));
     }
   } else {
-    console.log(chalk.blue("Melanjutkan tanpa proxy."));
+    console.log(chalk.blue("Continuing without proxy."));
   }
 }
 
@@ -271,7 +271,7 @@ async function performCheckIn(activityId, headers, privyIdToken) {
     );
     return response.data;
   } catch (err) {
-    console.error(chalk.red(`Error saat check-in untuk activityId: ${activityId}: ${err.message}`));
+    console.error(chalk.red(`Error during check-in for activityId: ${activityId}: ${err.message}`));
     return null;
   }
 }
@@ -344,7 +344,7 @@ Resources:
       return { userLoginToken, displayName, wallet, address, loginTime: Date.now(), privyIdToken: identity_token };
     }, 30, 2000, debug);
   } catch (err) {
-    console.error(chalk.red(`Login gagal untuk akun ${shortAddress((new Wallet(walletKey)).address)}: ${err.message}`));
+    console.error(chalk.red(`Login failed for account ${shortAddress((new Wallet(walletKey)).address)}: ${err.message}`));
     return null;
   }
 }
@@ -388,7 +388,7 @@ async function runCycleOnce(walletKey) {
     const response = await axiosInstance.post("https://api.deform.cc/", userMePayload, { headers: userMeHeaders });
     userMePoints = response.data.data.userMe.campaignSpot.points || 0;
   } catch (err) {
-    console.error(chalk.red("Error saat mengambil XP UserMe:", err.response ? err.response.data : err.message));
+    console.error(chalk.red("Error while fetching UserMe XP:", err.response ? err.response.data : err.message));
   }
 
   const campaignPayload = {
@@ -456,12 +456,12 @@ async function runCycleOnce(walletKey) {
       spinnerCheckin.stop();
       if (!checkInResponse) {
         checkinStatus = "Check-in Gagal";
-        console.log(chalk.red(`Check-in gagal: Tidak ada respons dari server.`));
+        console.log(chalk.red(`Check-in failed: No response from the server.`));
       } else if (
         checkInResponse?.data?.verifyActivity?.record?.status?.toUpperCase() === "COMPLETED"
       ) {
         checkinStatus = "Check-in Berhasil";
-        console.log(chalk.green("Check-in berhasil dilakukan."));
+        console.log(chalk.green("Check-in completed successfully."));
       } else if (
         checkInResponse?.data?.errors?.some(err =>
           err.message?.toLowerCase().includes("already checked in") ||
@@ -475,16 +475,16 @@ async function runCycleOnce(walletKey) {
         console.log(chalk.green("Already check-in today."));
       } else {
         checkinStatus = "Check-in Gagal";
-        console.log(chalk.red(`Check-in gagal. Respons: ${JSON.stringify(checkInResponse)}`));
+        console.log(chalk.red(`Check-in failed. Response: ${JSON.stringify(checkInResponse)}`));
       }
     } catch (err) {
       spinnerCheckin.stop();
       checkinStatus = "Check-in Gagal";
-      console.log(chalk.red(`Check-in gagal: ${err.response ? JSON.stringify(err.response.data) : err.message}`));
+      console.log(chalk.red(`Check-in failed: ${err.response ? JSON.stringify(err.response.data) : err.message}`));
     }
   }
 
-  console.log(chalk.magenta('\n==========================================================================='));
+  console.log(chalk.magenta('==========================================================================='));
   console.log(chalk.blueBright.bold(`                         USER INFORMATION - ${shortAddress(address)}`));
   console.log(chalk.magenta('============================================================================'));
   console.log(chalk.cyanBright(`Name          : ${displayName}`));
@@ -530,18 +530,18 @@ async function mainLoopRoundRobin() {
 
   const accounts = readPrivateKeysFromFile('.env');
   if (!accounts.length) {
-    console.error(chalk.red("Tidak ada private key ditemukan di file .env"));
+    console.error(chalk.red("No private key found in the .env file"));
     process.exit(1);
   }
 
   while (true) {
     const cycleStart = Date.now();
     for (const key of accounts) {
-      console.log(chalk.cyan(`Memproses akun: ${shortAddress((new Wallet(key)).address)}\n`));
+      console.log(chalk.cyan(`Processing account: ${shortAddress((new Wallet(key)).address)}\n`));
       try {
         await runCycleOnce(key);
       } catch (err) {
-        console.error(chalk.red(`Error untuk akun ${shortAddress((new Wallet(key)).address)}: ${err.message}`));
+        console.error(chalk.red(`Error for account ${shortAddress((new Wallet(key)).address)}: ${err.message}`));
       }
       await new Promise(resolve => setTimeout(resolve, 3000));
     }
@@ -559,9 +559,9 @@ function readPrivateKeysFromFile(filename) {
     const content = fs.readFileSync(filename, 'utf8');
     return content.split('\n').map(line => line.trim()).filter(line => line !== '');
   } catch (err) {
-    console.error(chalk.red("Gagal membaca file .env:", err.message));
+    console.error(chalk.red("Failed to read .env file:", err.message));
     process.exit(1);
   }
 }
 
-mainLoopRoundRobin().catch(err => console.error(chalk.red("Terjadi error fatal:", err.message)));
+mainLoopRoundRobin().catch(err => console.error(chalk.red("A fatal error occurred:", err.message)));
