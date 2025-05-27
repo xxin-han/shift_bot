@@ -357,7 +357,7 @@ Resources:
 
 async function runCycleOnce(walletKey) {
   const loginSpinner = ora(chalk.cyan(" Login...")).start();
-  const loginData = await doLogin(walleKey, false);
+  const loginData = await doLogin(walletKey, false);
   if (!loginData) {
     loginSpinner.fail(chalk.red("Login failed after max attempts. Skipping account."));
     return;
@@ -534,11 +534,19 @@ console.log(chalk.magenta('\n===================================================
 async function mainLoopRoundRobin() {
   await setupProxy();
 
-  const accounts = readPrivateKeysFromFile('.env');
-  if (!accounts.length) {
-    console.error(chalk.red("No private key found in .env file"));
-    process.exit(1);
+  function readPrivateKeysFromFile(.env) {
+  try {
+    const envContent = fs.readFileSync(.env, 'utf8');
+    // Example expects keys as: PRIVATE_KEYS="key1,key2,key3"
+    const match = envContent.match(/PRIVATE_KEYS\s*=\s*["'](.+)["']/);
+    if (!match) return [];
+    return match[1].split(',').map(k => k.trim()).filter(k => k.length > 0);
+  } catch (err) {
+    console.error(chalk.red(`Failed to read private keys from ${.env}: ${err.message}`));
+    return [];
   }
+}
+
 
   while (true) {
     const cycleStart = Date.now();
