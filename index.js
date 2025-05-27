@@ -496,10 +496,10 @@ async function runCycleOnce(walletKey) {
 
   console.log(chalk.magenta('\n----------------------------- Claimed Tasks ----------------------------\n'));
   if (claimedTasks.length === 0) {
-    console.log(chalk.red('(Tidak ada task yang telah claimed)\n'));
+    console.log(chalk.red('(There are no tasks that have been claimed.)\n'));
   } else {
     claimedTasks.forEach(task => {
-      console.log(chalk.green(`[VERIFIED] Task: ${task.title} => Sudah Claimed`));
+      console.log(chalk.green(`[VERIFIED] Task: ${task.title} => Already Claimed`));
     });
     console.log('');
   }
@@ -507,7 +507,7 @@ async function runCycleOnce(walletKey) {
 
   console.log(chalk.magenta('---------------------------- Unclaimed Tasks ---------------------------\n'));
   if (unclaimedTasks.length === 0) {
-    console.log(chalk.red('(Tidak ada unclaimed task)\n'));
+    console.log(chalk.red('(No unclaimed tasks.)\n'));
   } else {
     for (const task of unclaimedTasks) {
       const spinnerTask = ora(chalk.cyan(`Verifying: ${task.title}`)).start();
