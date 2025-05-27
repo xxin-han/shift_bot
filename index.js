@@ -534,15 +534,15 @@ console.log(chalk.magenta('\n===================================================
 async function mainLoopRoundRobin() {
   await setupProxy();
 
-  function readPrivateKeysFromFile(.env) {
+  function readPrivateKeysFromFile(filename) {
   try {
-    const envContent = fs.readFileSync(.env, 'utf8');
+    const envContent = fs.readFileSync(filename, 'utf8');
     // Example expects keys as: PRIVATE_KEYS="key1,key2,key3"
     const match = envContent.match(/PRIVATE_KEYS\s*=\s*["'](.+)["']/);
     if (!match) return [];
     return match[1].split(',').map(k => k.trim()).filter(k => k.length > 0);
   } catch (err) {
-    console.error(chalk.red(`Failed to read private keys from ${.env}: ${err.message}`));
+    console.error(chalk.red(`Failed to read private keys from ${filename}: ${err.message}`));
     return [];
   }
 }
