@@ -28,7 +28,7 @@ The script performs key functions such as:
 ## Installation
 
 1. Make sure you have [Node.js](https://nodejs.org/) installed on your system.
-2. Register [CoinSift]([https://github.com/username/repo](https://campaign.coinshift.xyz/?referral=6XbgULexPpYg))
+2. Register [CoinSift](https://campaign.coinshift.xyz/?referral=6XbgULexPpYg)
 
 3. Install Tools.
    ```bash
