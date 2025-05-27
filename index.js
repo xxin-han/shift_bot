@@ -350,13 +350,13 @@ Resources:
 }
 
 async function runCycleOnce(walletKey) {
-  const loginSpinner = ora(chalk.cyan(" Memproses login...")).start();
+  const loginSpinner = ora(chalk.cyan(" Processing login...")).start();
   const loginData = await doLogin(walletKey, false);
   if (!loginData) {
-    loginSpinner.fail(chalk.red("Login gagal setelah max attempt. Melewati akun."));
+    loginSpinner.fail(chalk.red("Login failed after max attempts. Skipping account."));
     return;
   }
-  loginSpinner.succeed(chalk.green(" Login Sukses"));
+  loginSpinner.succeed(chalk.green(" Login successful"));
 
   const { userLoginToken, displayName, address, loginTime, privyIdToken } = loginData;
 
